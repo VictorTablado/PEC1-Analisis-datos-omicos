@@ -251,3 +251,4 @@ for (i in seq_along(columnas)) {
 }
 
 writeLines(contenido, "metadatos.md")
+print()
