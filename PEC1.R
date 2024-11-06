@@ -20,7 +20,7 @@ head (datos)
 
 matriz_datos <- as.matrix(datos[,c("M1_1_MSS","M1_2_MSS","M5_1_MSS","M5_2_MSS", "T49_1_MSS", "T49_2_MSS", "M42_1_PD", "M42_2_PD", "M43_1_PD", "M43_2_PD", "M64_1_PD", "M64_2_PD")])
 
-Metadata <- data.frame (sample_id = colnames(matriz_datos), condition = c(rep("MSS", 6), rep ("PD", 6)), strigsAsFactors = FALSE)
+Metadata <- data.frame (sample_id = colnames(matriz_datos), condition = c(rep("MSS", 6), rep ("PD", 6)), stringsAsFactors = FALSE)
 
 CaracteristicasMetadata <- data.frame(
   SequenceModifications = datos$SequenceModifications, 
@@ -38,7 +38,7 @@ se <- SummarizedExperiment(
 assay(se, "counts")
 colData(se)
 rowData(se)
-head (se$)
+head (se)
 
 #Obtenemos las dimensiones dle dataset
 dim(se)
@@ -236,3 +236,18 @@ modificaciones_comunes_completas <- merge(mod_fosfopeptidos_comunes, mod_volcano
 cat("\nModificaciones comunes combinadas:\n")
 print(modificaciones_comunes_completas)
 
+save (se, file = "analisis_fosfopéptidos")
+write.csv(datos, file = "datos.csv", row.names = FALSE)
+
+columnas <- colnames (datos)
+tipos <- sapply (datos, class)
+
+contenido <- "# Metadatos del dataset\n"
+contenido <- paste0(contenido, "Este archivo describe el dataset, sus solumnas y los tipos de datos.\n")
+
+for (i in seq_along(columnas)) {
+  contenido <- paste0(contenido, " ##", columnas[i], "\n",
+                      "- Tipo de datos:", tipos[i], "\n")
+}
+
+writeLines(contenido, "metadatos.md")
